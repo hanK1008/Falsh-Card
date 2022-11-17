@@ -14,6 +14,9 @@ data = pandas.read_csv("./data/french_words.csv")
 # print(word_dict)
 data2 = data.to_dict(orient="records")
 # print(data2)
+# word_choice = random.choice(data2)
+# next_french_word = word_choice["French"]
+# next_english_word = word_choice["English"]
 
 
 # ___________changing word after button pressed_______________________
@@ -23,18 +26,21 @@ def change_word():
     next_english_word = word_choice["English"]
     print(next_english_word, next_french_word)
 
+    canvas.itemconfig(canvas_image, image=front_card)
+    canvas.itemconfig(language_name, text="French", fill="black")
+    canvas.itemconfig(french_word, text=next_french_word, fill="black")
+
+
     # changing French word in canvas
-    canvas.itemconfig(french_word, text=next_french_word)
+    # canvas.itemconfig(french_word, text=next_french_word)
 
     # ___________ FLipping the card with  translation ____________
 
-    ###########################################################
-    ############# Start working from here ####################
-    ##########################################################
-    root.after(3000, change_word)
+    flip_card = root.after(3000)
     canvas.itemconfig(canvas_image, image=back_card)
-    canvas.itemconfig(language_name, text="English")
-    canvas.itemconfig(french_word, text=next_english_word)
+    canvas.itemconfig(language_name, text="English", fill="white")
+    canvas.itemconfig(french_word, text=next_english_word, fill="white")
+
 
 
 # ___________________________ Creating Window____________________________________
@@ -62,16 +68,18 @@ canvas.grid(row=0, column=0, columnspan=2)
 
 # Front Canvas
 front_card = PhotoImage(file="./images/card_front.png")
+back_card = PhotoImage(file="./images/card_back.png")
 canvas_image = canvas.create_image(400, 263, image=front_card)
 
 # Back canvas
 
-back_card = PhotoImage(file="./images/card_back.png")
+# back_card = PhotoImage(file="./images/card_back.png")
 # canvas.create_image(400, 263, image=back_card)
 
 # Creating texts in canvas
 language_name = canvas.create_text(400, 150, text="French", font=LANGUAGE_FONT)
 french_word = canvas.create_text(400, 263, text="trouve_PH", font=WORD_FONT)
+
 
 root.mainloop()
 
