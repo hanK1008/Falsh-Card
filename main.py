@@ -10,10 +10,34 @@ WORD_FONT = ("Ariel", 60, "bold")
 # word_choice = {}
 
 # ___________________________ Working with data__________________________________
-data = pandas.read_csv("./data/french_words.csv")
-data2 = data.to_dict(orient="records")
+try:
+    data = pandas.read_csv("./data/words_to_learn.csv")
 
-word_choice = random.choice(data2)
+except FileNotFoundError:
+    data = pandas.read_csv("./data/french_words.csv")
+    data2 = data.to_dict(orient="records")
+
+else:
+    data2 = data.to_dict(orient="records")
+
+finally:
+    word_choice = random.choice(data2)
+
+
+# ___________________________ Saving progress  __________________________________
+
+
+def remove_word():
+    # word is not get remove when file is get created for the first time
+    # Resolve this bug remove all the word from data2 before savng
+    data2.remove(word_choice)
+    new_dataframe = pandas.DataFrame(data2)
+    new_dataframe.to_csv("./data/words_to_learn.csv", index=False)
+
+
+def flip_front_and_remove_word():
+    flip_front()
+    remove_word()
 
 
 # ___________changing word after button pressed_______________________
@@ -43,7 +67,7 @@ flip_timer = root.after(3000, func=flip_back)
 # ___________________________ Creating Button____________________________________
 # Right Button
 right_image = PhotoImage(file="./images/right.png")         # Converting image to supported format
-right_button = Button(image=right_image, highlightthickness=0, border=0, command=flip_front)
+right_button = Button(image=right_image, highlightthickness=0, border=0, command=flip_front_and_remove_word)
 # For removing border from button use "highlightthickness=0, border=0"
 right_button.grid(column=1, row=1)
 
