@@ -7,7 +7,7 @@ import random
 BACKGROUND_COLOR = "#B1DDC6"
 LANGUAGE_FONT = ("Ariel", 40, "italic")
 WORD_FONT = ("Ariel", 60, "bold")
-# word_choice = {}
+word_choice = {}
 
 # ___________________________ Working with data__________________________________
 try:
@@ -16,33 +16,35 @@ try:
 except FileNotFoundError:
     data = pandas.read_csv("./data/french_words.csv")
     data2 = data.to_dict(orient="records")
+    new_dataframe = pandas.DataFrame(data2)
+    new_dataframe.to_csv("./data/words_to_learn.csv", index=False)   # It will remove index when making new data csv
 
 else:
     data2 = data.to_dict(orient="records")
 
-finally:
-    word_choice = random.choice(data2)
+
+word_choice = random.choice(data2)
+# print(word_choice)
 
 
 # ___________________________ Saving progress  __________________________________
 
 
 def remove_word():
-    # word is not get remove when file is get created for the first time
-    # Resolve this bug remove all the word from data2 before savng
+    global new_dataframe
     data2.remove(word_choice)
     new_dataframe = pandas.DataFrame(data2)
-    new_dataframe.to_csv("./data/words_to_learn.csv", index=False)
+    new_dataframe.to_csv("./data/words_to_learn.csv", index=False) # It will remove index when making new data csv
 
 
 def flip_front_and_remove_word():
-    flip_front()
     remove_word()
+    flip_front()
 
 
 # ___________changing word after button pressed_______________________
 def flip_back():
-    print(word_choice["English"], word_choice["French"])
+    # print(word_choice["English"], word_choice["French"])
     canvas.itemconfig(canvas_image, image=back_card)
     canvas.itemconfig(language_name, text="English", fill="white")
     canvas.itemconfig(french_word, text=word_choice["English"], fill="white")
@@ -52,6 +54,7 @@ def flip_front():
     global word_choice, flip_timer
     root.after_cancel(flip_timer)
     word_choice = random.choice(data2)
+    # print(word_choice)
     canvas.itemconfig(canvas_image, image=front_card)
     canvas.itemconfig(language_name, text="French", fill="black")
     canvas.itemconfig(french_word, text=word_choice["French"], fill="black")
